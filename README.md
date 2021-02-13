@@ -2,6 +2,16 @@
 
 A guide on the basics for using PDO PHP for MySQL.
 
+# Table of Contents
+
+1. [Connection](#connection)
+2. [SELECT queries](#select)
+3. [INSERT queries](#insert)
+4. [UPDATE queries](#update)
+5. [DELETE queries](#delete)
+
+<a name="connection"></a>
+
 ## Creating the database connection
 
 ##### Method 1: Inline
@@ -33,6 +43,8 @@ $db = db_connect();//Assign to variable before use
 See [here](https://www.php.net/manual/en/pdo.setattribute.php) for options.
 
 ```ATTR_ERRMODE``` throws exceptions on errors.
+
+<a name="select"></a>
 
 ## SELECT
 
@@ -133,6 +145,8 @@ if (!empty($row)) {//Row found
 }
 ```
 
+<a name="insert"></a>
+
 ## INSERT
 
 ```php
@@ -190,6 +204,8 @@ $query->execute([$id, $name, $price, $quantity, $price, $quantity]);
 $last_id = $db->lastInsertId();
 ```
 
+<a name="update"></a>
+
 ## UPDATE
 
 Update column/s
@@ -211,6 +227,8 @@ $update = $db->prepare("UPDATE `users` SET `status` = ? WHERE `score` > 75;");
 $update->execute([$status]);
 $updated_rows = $update->rowCount();//Returns rows amount that got updated
 ```
+
+<a name="delete"></a>
 
 ## DELETE
 
