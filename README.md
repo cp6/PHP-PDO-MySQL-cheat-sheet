@@ -4,8 +4,19 @@ A guide on the basics for using PDO PHP for MySQL.
 
 # Table of Contents
 
-1. [Connection](#connection)
+1. [Creating connection](#connection)
 2. [SELECT queries](#select)
+
+   2a [Loop](#loop)
+
+   2b [One row](#onerow)
+
+   2c [One column](#onecolumn)
+
+   2d [Count](#count)
+
+   2e [If exists](#ifexists)
+
 3. [INSERT queries](#insert)
 4. [UPDATE queries](#update)
 5. [DELETE queries](#delete)
@@ -48,6 +59,8 @@ See [here](https://www.php.net/manual/en/pdo.setattribute.php) for options.
 
 ## SELECT
 
+<a name="loop"></a>
+
 #### loop
 
 ```php
@@ -73,6 +86,8 @@ while ($row = $select->fetch(PDO::FETCH_ASSOC)) {
     echo "$db_col $db_col2<br>";
 }
 ```
+
+<a name="onerow"></a>
 
 #### One row
 
@@ -103,6 +118,8 @@ $email = $row['email'];
 $age = $row['age'];
 ```
 
+<a name="onecolumn"></a>
+
 #### One column
 
 Selecting one column only
@@ -116,6 +133,8 @@ $name = $select->fetchColumn();
 
 ```
 
+<a name="count"></a>
+
 #### count
 
 Count the returned rows amount
@@ -127,6 +146,8 @@ $select = $db->prepare("SELECT `name` FROM `users` WHERE `age` > ?;");
 $select->execute([$age]);
 $row_count = $select->rowCount();//Row count
 ```
+
+<a name="ifexits"></a>
 
 #### if exists
 
