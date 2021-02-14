@@ -1,10 +1,15 @@
 # PHP PDO MySQL Cheat sheet guide
 
-A guide on the basics for using PDO PHP for MySQL.
+A guide on the basics for using PDO PHP for MySQL with pre-prepared statements.
 
 # Table of Contents
 
 1. [Creating connection](#connection)
+
+   1a [inline](#connection)
+
+   1a [function](#connectionfunc)
+
 2. [SELECT queries](#select)
 
    2a [Loop](#loop)
@@ -18,7 +23,23 @@ A guide on the basics for using PDO PHP for MySQL.
    2e [If exists](#ifexists)
 
 3. [INSERT queries](#insert)
+
+   3a [insert](#insert)
+
+   3b [insert short form from array](#insertshortfromarray)
+
+   3c [on duplicate key update](#ondupeupdate)
+
+   3d [bind types](#bindtypes)
+
+   3e [get last inserted id](#lastid)
+
 4. [UPDATE queries](#update)
+
+   4a [update column/s](#update)
+
+   4b [get amount of rows updated](#rowsupdated)
+
 5. [DELETE queries](#delete)
 
 <a name="connection"></a>
@@ -31,6 +52,8 @@ A guide on the basics for using PDO PHP for MySQL.
 $db = new PDO('mysql:host=127.0.0.1;dbname=database;charset=utf8mb4', 'username', 'password');
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 ```
+
+<a name="connectionfunc"></a>
 
 ##### Method 2: Function
 
@@ -104,7 +127,7 @@ $email = $row['email'];
 $age = $row['age'];
 ```
 
-Alternate binding method:
+Alternate placeholder binding method:
 
 ```php
 $user_id = 37841;
@@ -193,6 +216,29 @@ $insert->execute([
 ]);
 ```
 
+<a name="insertshortfromarray"></a>
+Insert short form from array
+
+```php
+$users_array = array(
+['uid' => 1, 'name' => 'Mike', 'age' => 42],
+['uid' => 2, 'name' => 'John', 'age' => 36],
+['uid' => 3, 'name' => 'Tony', 'age' => 51]
+);
+$db->beginTransaction();
+$insert = $db->prepare("INSERT INTO `users` (`uid`, `name`, `age`) VALUES (?, ?, ?)");
+foreach ($users_array as $user) {
+    $insert->execute(array(
+        $user->uid,
+        $user->name,
+        $user->age,
+    ));
+}
+$db->commit();
+```
+
+<a name="ondupeupdate"></a>
+
 #### Insert on duplicate key update
 
 ```php
@@ -207,6 +253,7 @@ $query->bindParam(':quantity2', $quantity, PDO::PARAM_STR);
 $query->execute();
 ```
 
+<a name="bindtypes"></a>
 Common bindParam values: ```PARAM_BOOL, PARAM_NULL, PARAM_INT & PARAM_STR```
 
 ***Note there is NO float type.***
@@ -218,6 +265,8 @@ $query = $db->prepare('INSERT INTO `table` (id, name, price, quantity) VALUES(?,
     ON DUPLICATE KEY UPDATE `quantity` = ?, `price` = ?');
 $query->execute([$id, $name, $price, $quantity, $price, $quantity]);
 ```
+
+<a name="lastid"></a>
 
 #### Getting last inserted id
 
@@ -239,6 +288,7 @@ $update = $db->prepare("UPDATE `users` SET `score` = ? WHERE `uid` = ? LIMIT 1;"
 $update->execute([$score, $user_id]);
 ```
 
+<a name="rowsupdated"></a>
 Get amount of rows affected/updated:
 
 ```php
