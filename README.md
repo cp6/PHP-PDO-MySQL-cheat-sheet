@@ -10,6 +10,8 @@ A guide on the basics for using PDO PHP for MySQL with pre-prepared statements.
 
    1b [function](#connectionfunc)
 
+   1c [class example](#classexample)
+
 2. [SELECT queries](#select)
 
    2a [Loop](#loop)
@@ -311,4 +313,50 @@ $user_id = 37841;
 
 $delete = $db->prepare("DELETE FROM `users` WHERE `uid` = ? LIMIT 1;");
 $delete->execute([$user_id]);
+```
+
+<a name="classexample"></a>
+
+## Class example
+
+PDO connection class example where you won't need to keep setting and creating a connection
+
+```php
+class test_class
+{
+    protected const HOSTNAME = '127.0.0.1';
+    protected const DATABASE = 'database';
+    protected const USERNAME = 'root';
+    protected const PASSWORD = 'thepassword';
+    protected PDO $db;
+
+    public function __construct()
+    {
+        $db = "mysql:host=" . self::HOSTNAME . ";dbname=" . self::DATABASE . ";charset=utf8mb4";
+        $options = array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION);
+        $this->db = new PDO($db, self::USERNAME, self::PASSWORD, $options);
+    }
+
+    public function nameForUID(int $id)
+    {
+        $select = $this->db->prepare("SELECT `name` FROM `users` WHERE `uid` = ? LIMIT 1;");
+        $select->execute([$id]);
+        $row = $select->fetch(PDO::FETCH_ASSOC);
+        if (!empty($row)) {//Row found
+            return $row['name'];
+        } else {//NO row found
+            return 'Error: No name found';
+        }
+    }
+
+    //..........
+}
+```
+
+#### usage:
+
+```php
+$test_db = new test_class();
+
+echo $test_db->nameForUID(1);
 ```
