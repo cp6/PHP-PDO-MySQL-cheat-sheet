@@ -8,7 +8,7 @@ A guide on the basics for using PDO PHP for MySQL with pre-prepared statements.
 
    1a [inline](#connection)
 
-   1a [function](#connectionfunc)
+   1b [function](#connectionfunc)
 
 2. [SELECT queries](#select)
 
@@ -221,10 +221,11 @@ Insert short form from array
 
 ```php
 $users_array = array(
-['uid' => 1, 'name' => 'Mike', 'age' => 42],
-['uid' => 2, 'name' => 'John', 'age' => 36],
-['uid' => 3, 'name' => 'Tony', 'age' => 51]
-);
+  ['uid' => 1, 'name' => 'Mike', 'age' => 42],
+  ['uid' => 2, 'name' => 'John', 'age' => 36],
+  ['uid' => 3, 'name' => 'Tony', 'age' => 51]
+); 
+
 $db->beginTransaction();
 $insert = $db->prepare("INSERT INTO `users` (`uid`, `name`, `age`) VALUES (?, ?, ?)");
 foreach ($users_array as $user) {
